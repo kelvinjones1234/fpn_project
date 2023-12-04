@@ -9,7 +9,7 @@ from django.contrib.auth import login, logout
 from .serializers import SignUpSerializer, SignInSerializer, UserSerializer, AllUserSerializer
 from django.core.mail import send_mail
 from django.conf import settings
-
+from django.shortcuts import get_object_or_404
 
 
 class SignUpView(generics.CreateAPIView):
@@ -24,7 +24,7 @@ class SignUpView(generics.CreateAPIView):
         user.save()
 
         # Send verification email
-        verification_url = f'http://your-frontend-url/verify/{user.verification_token}/'
+        verification_url = f'http://localhost:8000/api/verify/{user.verification_token}/'
         send_mail(
             'Verify Your Email',
             f'Click the following link to verify your email: {verification_url}',
@@ -32,16 +32,14 @@ class SignUpView(generics.CreateAPIView):
             [user.email],
             fail_silently=False,
         )
-        print(user.email)
-        return Response({'message': 'User registered successfully. Check your email for verification.', 'url': verification_url},
-                        status=status.HTTP_201_CREATED)
+        return Response({'message': 'User registered successfully. Check your email for verification.'}, status=status.HTTP_201_CREATED)
 
 
 
 
 class VerificationView(APIView):
     def get(self, request, token):
-        user = get_object_or_404(CustomUser, verification_token=token)
+        user = get_object_or_404(User, verification_token=token)
         user.is_active = True
         user.verification_token = None
         user.save()
