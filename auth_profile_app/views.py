@@ -87,11 +87,4 @@ class AllUsersView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
         
 
-https://praise01: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@github.com/praise01/school-payment.git
 
-git clone https://praise01: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@githubn@github.com/praise01/school-payment.git
-
-git remote set-url origin https://github.com/praise01/school-payment.git
-
-git config remote.origin.url git@github.com:praise01/school-payment.git
-git remote set-url origin git@github.com:praise01/school-payment.git
