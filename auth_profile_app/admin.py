@@ -9,7 +9,7 @@ class UserAdmin(UserAdmin):
     list_filter = ('is_staff', 'is_active')
     list_editable = ('is_active', 'is_staff', 'is_active')  
     fieldsets = (
-        ('Authentication Information', {'fields': ('email', 'password', 'verification_token')}),
+        ('Authentication Information', {'fields': ('email', 'password')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
         ('Dates', {'fields': ('last_login', 'date_joined')}),
     )

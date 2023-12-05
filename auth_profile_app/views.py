@@ -43,7 +43,7 @@ class VerificationView(APIView):
         user.is_active = True
         user.verification_token = None
         user.save()
-        return Response({'message': 'Email verified successfully'}, status=200)
+        return Response({'message': "You've successfully created an account"}, status=200)
 
 
 
