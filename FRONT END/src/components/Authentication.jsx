@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import axios from "axios";
+import Alert from "react-bootstrap/Alert";
 import { Form, Row, Col, Button } from "react-bootstrap";
+import "./SignIn.css";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+
 
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
@@ -13,6 +17,7 @@ const SignUpForm = () => {
   const [password, setPassword] = useState("");
   const [currentUser, setCurrentUser] = useState();
   const [registrationToggle, setRegistrationToggle] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   useEffect(() => {
     const checkLoggedInStatus = async () => {
@@ -107,6 +112,8 @@ const SignUpForm = () => {
       setCurrentUser(true);
     } catch (error) {
       console.error("Error signing in:", error);
+      // Show error alert
+      setShowError(true);
     }
   };
 
@@ -249,6 +256,16 @@ const SignUpForm = () => {
               Sign In
             </Button>
           </Form>
+          <Alert
+            variant="danger"
+            show={showError}
+            onClose={() => setShowError(false)}
+            dismissible
+            className="error-alert"
+          >
+            <Alert.Heading></Alert.Heading>
+            <p>Incorrect login details. Please try again.</p>
+          </Alert>
         </div>
       )}
     </>
