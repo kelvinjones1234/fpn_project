@@ -93,7 +93,7 @@ export default function Transaction() {
       const { data } = await response.json();
 
       // Open the authorization_url in a new window
-      window.open(data.authorization_url, "_blank");
+      window.location.href = data.authorization_url;
 
       // Set the payment status (optional)
       setPaymentStatus(
@@ -119,7 +119,7 @@ export default function Transaction() {
 
       if (response.ok) {
         console.log("User signed out successfully");
-        navigate("/authentication")
+        navigate("/authentication");
         // setCurrentUser(false); // Update the user's sign-in state
       } else {
         console.error("Error signing out:", response.statusText);
@@ -146,136 +146,140 @@ export default function Transaction() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <form>
-        <label>
-          First Name:
-          <input
-            type="text"
-            value={formData.first_name}
-            onChange={(e) =>
-              setFormData((prevState) => ({
-                ...prevState,
-                first_name: e.target.value,
-              }))
-            }
-          />
-        </label>
-        <br />
+      <Container>
+        <form>
+          <label>
+            <Form.Control
+              type="text"
+              value={formData.first_name}
+              onChange={(e) =>
+                setFormData((prevState) => ({
+                  ...prevState,
+                  first_name: e.target.value,
+                }))
+              }
+              placeholder="First Name"
+            />
+          </label>
+          <br />
 
-        <label>
-          Middle Name:
-          <input
-            type="text"
-            value={formData.middle_name}
-            onChange={(e) =>
-              setFormData((prevState) => ({
-                ...prevState,
-                middle_name: e.target.value,
-              }))
-            }
-          />
-        </label>
-        <br />
+          <label>
+            <Form.Control
+              type="text"
+              value={formData.middle_name}
+              onChange={(e) =>
+                setFormData((prevState) => ({
+                  ...prevState,
+                  middle_name: e.target.value,
+                }))
+              }
+              placeholder="Middle Name"
+            />
+          </label>
+          <br />
 
-        <label>
-          Last Name:
-          <input
-            type="text"
-            value={formData.last_name}
-            onChange={(e) =>
-              setFormData((prevState) => ({
-                ...prevState,
-                last_name: e.target.value,
-              }))
-            }
-          />
-        </label>
-        <br />
-        <label>
-          Matriculation Number:
-          <input
-            type="text"
-            value={formData.matriculation_number}
-            onChange={(e) =>
-              setFormData((prevState) => ({
-                ...prevState,
-                matriculation_number: e.target.value,
-              }))
-            }
-          />
-        </label>
-        <br />
-        <label>
-          Department
-          <select
-            value={formData.department}
-            onChange={(e) => handleDepartmentChange(e.target.value)}
-          >
-            <option value="">
-              {formData.department ? formData.department : "Select Department"}
-            </option>
-            {departments.map((department) => (
-              <option key={department.id} value={department.id}>
-                {department.department}
+          <label>
+            <Form.Control
+              type="text"
+              value={formData.last_name}
+              onChange={(e) =>
+                setFormData((prevState) => ({
+                  ...prevState,
+                  last_name: e.target.value,
+                }))
+              }
+              placeholder="Last Name"
+            />
+          </label>
+          <br />
+          <label>
+            <Form.Control
+              type="text"
+              value={formData.matriculation_number}
+              onChange={(e) =>
+                setFormData((prevState) => ({
+                  ...prevState,
+                  matriculation_number: e.target.value,
+                }))
+              }
+              placeholder="Matriculation Number"
+            />
+          </label>
+          <br />
+          <label>
+            {/* Department */}
+            <Form.Select
+              aria-label="Default select example"
+              value={formData.department}
+              onChange={(e) => handleDepartmentChange(e.target.value)}
+            >
+              <option value="">
+                {formData.department ? formData.department : "Department"}
               </option>
-            ))}
-          </select>
-        </label>
-        <br />
+              {departments.map((department) => (
+                <option key={department.id} value={department.id}>
+                  {department.department}
+                </option>
+              ))}
+            </Form.Select>
+          </label>
+          <br />
 
-        <label>
-          Levy:
-          <select
-            value={formData.levy}
-            onChange={(e) => handleLevyChange(e.target.value)}
-          >
-            <option value="">
-              {formData.levy ? formData.levy : "Select Levy"}
-            </option>
-            {levies.map((levy) => (
-              <option key={levy.id} value={levy.id}>
-                {levy.levy}
+          <label>
+            {/* Levy */}
+            <Form.Select
+              aria-label="Default select example"
+              value={formData.levy}
+              onChange={(e) => handleLevyChange(e.target.value)}
+            >
+              <option value="">
+                {formData.levy ? formData.levy : "Payment for..."}
               </option>
-            ))}
-          </select>
-        </label>
-        <br />
+              {levies.map((levy) => (
+                <option key={levy.id} value={levy.id}>
+                  {levy.levy}
+                </option>
+              ))}
+            </Form.Select>
+          </label>
+          <br />
 
-        <label>
-          Amount:
-          <input
-            type="text"
-            value={formData.amount}
-            onChange={(e) =>
-              setFormData((prevState) => ({
-                ...prevState,
-                amount: e.target.value,
-              }))
-            }
-            readOnly
-          />
-        </label>
-        <br />
+          <label>
+            <Form.Control
+              type="text"
+              value={formData.amount}
+              onChange={(e) =>
+                setFormData((prevState) => ({
+                  ...prevState,
+                  amount: e.target.value,
+                }))
+              }
+              placeholder="Amount"
+            />
+          </label>
+          <br />
 
-        <label>
-          Email:
-          <input
-            type="email"
-            value={formData.email}
-            onChange={(e) =>
-              setFormData((prevState) => ({
-                ...prevState,
-                email: e.target.value,
-              }))
-            }
-          />
-        </label>
-        <br />
-        <button type="button" onClick={initiatePayment}>
-          Initiate Payment
-        </button>
-        {paymentStatus && <p>{paymentStatus}</p>}
-      </form>
+          <label>
+            <Form.Control
+              type="text"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData((prevState) => ({
+                  ...prevState,
+                  email: e.target.value,
+                }))
+              }
+              placeholder="Email"
+            />
+          </label>
+          <br />
+
+          <Button id="form-btn" onClick={initiatePayment}>
+            Make Payment
+          </Button>
+          {paymentStatus && <p>{paymentStatus}</p>}
+        </form>
+      </Container>
     </div>
   );
 }
