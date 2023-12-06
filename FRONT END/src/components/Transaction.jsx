@@ -3,8 +3,7 @@ import axios from "axios";
 import Navbar from "react-bootstrap/Navbar";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
-
-
+import { useNavigate } from "react-router-dom";
 
 export default function Transaction() {
   const [formData, setFormData] = useState({
@@ -21,6 +20,7 @@ export default function Transaction() {
   const [paymentStatus, setPaymentStatus] = useState(null);
   const [departments, setDepartments] = useState([]);
   const [levies, setLevies] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch department options from Django API
@@ -107,7 +107,6 @@ export default function Transaction() {
     }
   };
 
-
   const handleSignOut = async () => {
     try {
       const response = await fetch("http://localhost:8000/api/signout/", {
@@ -120,6 +119,7 @@ export default function Transaction() {
 
       if (response.ok) {
         console.log("User signed out successfully");
+        navigate("/authentication")
         // setCurrentUser(false); // Update the user's sign-in state
       } else {
         console.error("Error signing out:", response.statusText);
@@ -131,21 +131,21 @@ export default function Transaction() {
 
   return (
     <div>
-       <Navbar className="bg-dark">
-          <Container>
-            <Navbar.Brand href="#home">School Logo</Navbar.Brand>
-            <Navbar.Toggle />
-            <Navbar.Collapse className="justify-content-end">
-              <Navbar.Text>
-                <form>
-                  <Button id="form-btn" onClick={handleSignOut}>
-                    sign out
-                  </Button>
-                </form>
-              </Navbar.Text>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
+      <Navbar className="bg-dark">
+        <Container>
+          <Navbar.Brand href="#home">School Logo</Navbar.Brand>
+          <Navbar.Toggle />
+          <Navbar.Collapse className="justify-content-end">
+            <Navbar.Text>
+              <form>
+                <Button id="form-btn" onClick={handleSignOut}>
+                  sign out
+                </Button>
+              </form>
+            </Navbar.Text>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
       <form>
         <label>
           First Name:
