@@ -5,8 +5,6 @@ import axios from "axios";
 import Alert from "react-bootstrap/Alert";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import "./SignIn.css";
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
-
 
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";

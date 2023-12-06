@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { PaystackButton } from "react-paystack";
+import Navbar from "react-bootstrap/Navbar";
+import { Form, Row, Col, Button } from "react-bootstrap";
+import Container from "react-bootstrap/Container";
+
+
 
 export default function Transaction() {
   const [formData, setFormData] = useState({
@@ -27,25 +31,27 @@ export default function Transaction() {
   }, []);
 
   const handleDepartmentChange = (value) => {
-    const selectedDepartment = departments.find((department) => department.id === parseInt(value));
-  
+    const selectedDepartment = departments.find(
+      (department) => department.id === parseInt(value)
+    );
+
     setFormData((prevState) => ({
       ...prevState,
       department: selectedDepartment ? selectedDepartment.department : "",
-      levy: "",
+      levy: "", // Clear the levy when department changes
       amount: "",
     }));
-  
+
     // Fetch levies based on the selected department
     axios
       .get(`http://localhost:8000/api/levies/${value}/`)
       .then((response) => setLevies(response.data))
       .catch((error) => console.error("Error fetching levies:", error));
   };
-  
+
   const handleLevyChange = (value) => {
     const selectedLevy = levies.find((levy) => levy.id === parseInt(value));
-  
+
     setFormData((prevState) => ({
       ...prevState,
       levy: selectedLevy ? selectedLevy.levy : "",
@@ -79,7 +85,7 @@ export default function Transaction() {
           body: JSON.stringify(formData),
         }
       );
-        console.log(formData)
+      console.log(formData);
       if (!response.ok) {
         throw new Error("Failed to initiate payment");
       }
@@ -101,10 +107,47 @@ export default function Transaction() {
     }
   };
 
+
+  const handleSignOut = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/signout/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Include credentials in the request
+      });
+
+      if (response.ok) {
+        console.log("User signed out successfully");
+        // setCurrentUser(false); // Update the user's sign-in state
+      } else {
+        console.error("Error signing out:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
   return (
     <div>
+       <Navbar className="bg-dark">
+          <Container>
+            <Navbar.Brand href="#home">School Logo</Navbar.Brand>
+            <Navbar.Toggle />
+            <Navbar.Collapse className="justify-content-end">
+              <Navbar.Text>
+                <form>
+                  <Button id="form-btn" onClick={handleSignOut}>
+                    sign out
+                  </Button>
+                </form>
+              </Navbar.Text>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
       <form>
-      <label>
+        <label>
           First Name:
           <input
             type="text"
@@ -162,14 +205,15 @@ export default function Transaction() {
           />
         </label>
         <br />
-
         <label>
-          Department:
+          Department
           <select
             value={formData.department}
             onChange={(e) => handleDepartmentChange(e.target.value)}
           >
-            <option value="">Select Department</option>
+            <option value="">
+              {formData.department ? formData.department : "Select Department"}
+            </option>
             {departments.map((department) => (
               <option key={department.id} value={department.id}>
                 {department.department}
@@ -185,7 +229,9 @@ export default function Transaction() {
             value={formData.levy}
             onChange={(e) => handleLevyChange(e.target.value)}
           >
-            <option value="">Select Levy</option>
+            <option value="">
+              {formData.levy ? formData.levy : "Select Levy"}
+            </option>
             {levies.map((levy) => (
               <option key={levy.id} value={levy.id}>
                 {levy.levy}
