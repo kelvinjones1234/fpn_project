@@ -3,6 +3,16 @@ from .models import User
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import ValidationError
 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['email'] = user.email
+        return token
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -20,22 +30,3 @@ class SignUpSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-class SignInSerializer(serializers.Serializer):
-    email = serializers.CharField()
-    password = serializers.CharField()
-
-    def validate_user(self, validated_data):
-        user = authenticate(email=validated_data['email'], password=validated_data['password'])
-        if not user:
-             raise ValidationError('user not found')
-        return user
-    
-class UserSerializer(serializers.ModelSerializer):
-     class Meta:
-        model = User
-        fields = ['email', 'id']
-
-class AllUserSerializer(serializers.Serializer):
-    class Meta:
-        model = User
-        field = ['email', 'id']

@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Navbar from "react-bootstrap/Navbar";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
 
-export default function Transaction() {
+export default function Payment({ children }) {
+  const { authTokens, user } = useContext(AuthContext);
+
   const [formData, setFormData] = useState({
     matriculation_number: "",
     first_name: "",
@@ -14,7 +17,6 @@ export default function Transaction() {
     department: "",
     levy: "",
     amount: "",
-    email: "",
   });
 
   const [paymentStatus, setPaymentStatus] = useState(null);
@@ -58,17 +60,17 @@ export default function Transaction() {
       amount: selectedLevy ? selectedLevy.amount : "",
     }));
   };
+
   const initiatePayment = async () => {
     try {
-      // Validate email, amount, and other fields (add your own validation logic)
       if (
         !formData.matriculation_number ||
         !formData.first_name ||
         !formData.last_name ||
         !formData.department ||
         !formData.levy ||
-        !formData.amount ||
-        !formData.email
+        !formData.amount
+        // !formData.email
       ) {
         alert("Please fill in all fields.");
         return;
@@ -81,7 +83,10 @@ export default function Transaction() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: "Bearer " + String(authTokens.access),
           },
+          withCredentials: true,
+
           body: JSON.stringify(formData),
         }
       );
@@ -130,25 +135,19 @@ export default function Transaction() {
   };
 
   return (
-    <div>
-      <Navbar className="bg-dark">
-        <Container>
-          <Navbar.Brand href="#home">School Logo</Navbar.Brand>
-          <Navbar.Toggle />
-          <Navbar.Collapse className="justify-content-end">
-            <Navbar.Text>
-              <form>
-                <Button id="form-btn" onClick={handleSignOut}>
-                  sign out
-                </Button>
-              </form>
-            </Navbar.Text>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-      <Container>
-        <form>
-          <label>
+    <>
+      {children}
+      <div className="d-flex justify-content-center align-items-center vh-50">
+        <Form
+          style={{
+            maxWidth: "900px",
+            width: "100%",
+            paddingTop: "50px",
+            paddingRight: "25px",
+            paddingLeft: "50px",
+          }}
+        >
+          <label className="mb-3 mx-3">
             <Form.Control
               type="text"
               value={formData.first_name}
@@ -161,9 +160,8 @@ export default function Transaction() {
               placeholder="First Name"
             />
           </label>
-          <br />
 
-          <label>
+          <label className="mb-3 mx-3">
             <Form.Control
               type="text"
               value={formData.middle_name}
@@ -176,9 +174,8 @@ export default function Transaction() {
               placeholder="Middle Name"
             />
           </label>
-          <br />
 
-          <label>
+          <label className="mb-3 mx-3">
             <Form.Control
               type="text"
               value={formData.last_name}
@@ -192,7 +189,8 @@ export default function Transaction() {
             />
           </label>
           <br />
-          <label>
+
+          <label className="mb-3 mx-3">
             <Form.Control
               type="text"
               value={formData.matriculation_number}
@@ -205,8 +203,8 @@ export default function Transaction() {
               placeholder="Matriculation Number"
             />
           </label>
-          <br />
-          <label>
+
+          <label className="mb-3 mx-3">
             {/* Department */}
             <Form.Select
               aria-label="Default select example"
@@ -223,9 +221,17 @@ export default function Transaction() {
               ))}
             </Form.Select>
           </label>
-          <br />
 
-          <label>
+          <label className="mb-3 mx-3">
+            <Form.Control
+              type="text"
+              value={user.email}
+              placeholder="Email"
+              readOnly
+            />
+          </label>
+
+          <label className="mb-3 mx-3">
             {/* Levy */}
             <Form.Select
               aria-label="Default select example"
@@ -242,9 +248,8 @@ export default function Transaction() {
               ))}
             </Form.Select>
           </label>
-          <br />
 
-          <label>
+          <label className="mb-3 mx-3">
             <Form.Control
               type="text"
               value={formData.amount}
@@ -255,31 +260,18 @@ export default function Transaction() {
                 }))
               }
               placeholder="Amount"
+              readOnly
             />
           </label>
-          <br />
 
-          <label>
-            <Form.Control
-              type="text"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData((prevState) => ({
-                  ...prevState,
-                  email: e.target.value,
-                }))
-              }
-              placeholder="Email"
-            />
-          </label>
-          <br />
+          
 
-          <Button id="form-btn" onClick={initiatePayment}>
+          <Button className="mb-3 mx-3" id="form-btn" onClick={initiatePayment}>
             Make Payment
           </Button>
           {paymentStatus && <p>{paymentStatus}</p>}
-        </form>
-      </Container>
-    </div>
+        </Form>
+      </div>
+    </>
   );
 }

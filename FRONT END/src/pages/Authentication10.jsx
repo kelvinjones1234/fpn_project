@@ -16,30 +16,7 @@ const SignUpForm = () => {
   const [currentUser, setCurrentUser] = useState();
   const [registrationToggle, setRegistrationToggle] = useState(false);
   const [showError, setShowError] = useState(false);
-
-  useEffect(() => {
-    const checkLoggedInStatus = async () => {
-      try {
-        const response = await fetch("http://localhost:8000/api/user/", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
-
-        if (response.ok) {
-          setCurrentUser(true);
-        } else {
-          setCurrentUser(false);
-        }
-      } catch (error) {
-        console.error("Error checking logged-in status:", error);
-      }
-    };
-
-    checkLoggedInStatus();
-  }, []); // The empty dependency array ensures that this effect runs only once when the component mounts
+  
 
   const update_form_btn = () => {
     if (registrationToggle) {
@@ -71,24 +48,24 @@ const SignUpForm = () => {
 
   const handleSignOut = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/signout/", {
-        method: "POST",
+      const response = await axios.post("http://localhost:8000/api/signout/", {}, {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // Include credentials in the request
+        withCredentials: true, // Include credentials in the request
       });
-
-      if (response.ok) {
+  
+      if (response.status === 200) {
         console.log("User signed out successfully");
         setCurrentUser(false); // Update the user's sign-in state
       } else {
         console.error("Error signing out:", response.statusText);
       }
     } catch (error) {
-      console.error("Error signing out:", error);
+      console.error("Error signing out:", error.message);
     }
   };
+  
 
   const handleSignIn = async () => {
     try {

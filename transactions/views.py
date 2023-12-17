@@ -8,6 +8,8 @@ import requests
 from django.shortcuts import get_object_or_404
 from management_app.models import Department, Levy
 from .serializers import TransactionSerializer
+from rest_framework.permissions import IsAuthenticated
+
 
 class TransactionListCreateView(generics.ListCreateAPIView):
     queryset = Transaction.objects.all()
@@ -15,9 +17,15 @@ class TransactionListCreateView(generics.ListCreateAPIView):
 
 
 class InitiatePaymentView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
+        # Check if the user is authenticated
+        if not request.user.is_authenticated:
+            return Response({'error': 'User not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+
         # Get the necessary data from the request
-        email = request.data.get('email')
+        user = request.user
         amount = request.data.get('amount')
         matriculation_number = request.data.get('matriculation_number')
         first_name = request.data.get('first_name')
@@ -36,32 +44,33 @@ class InitiatePaymentView(APIView):
 
         data = {
             'amount': amount_in_kobo,
-            'currency': 'NGN',  # Change this to your currency
-            'email': email,
-            'callback_url': f'http://localhost:8000/api/verify-payment/',  # Change this to your callback URL
+            'currency': 'NGN',
+            'email': user.email,
+            'callback_url': f'http://localhost:8000/api/verify-payment/',
             # Add other necessary parameters as needed
         }
 
         response = requests.post('https://api.paystack.co/transaction/initialize', json=data, headers=headers)
         response_data = response.json()
-        department = get_object_or_404(Department, department=department)
-        levy = get_object_or_404(Levy, levy=levy)
+        department_obj = get_object_or_404(Department, department=department)
+        levy_obj = get_object_or_404(Levy, levy=levy)
+        
         # Save payment information in your database
         transaction = Transaction.objects.create(
             reference=response_data['data']['reference'],
-            email=email,
+            email=user.email,
             amount=amount,
-            first_name = first_name,
-            middle_name = middle_name,
-            last_name = middle_name,
-            matriculation_number = matriculation_number,
-            department = department,
-            levy = levy
-            
+            first_name=first_name,
+            middle_name=middle_name,
+            last_name=last_name,
+            matriculation_number=matriculation_number,
+            department=department_obj,
+            levy=levy_obj
         )
         transaction.save()
 
         return Response(response_data, status=status.HTTP_201_CREATED)
+
 
 
 class VerifyPaymentView(APIView):

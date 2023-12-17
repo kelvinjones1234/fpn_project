@@ -2,7 +2,6 @@ from django.db import models
 from management_app.models import Department, Levy
 from django.utils import timezone
 import secrets
-from .paystack import Paystack
 
 class Transaction(models.Model):
     matriculation_number = models.CharField(max_length=20)
