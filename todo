@@ -1,6 +1,4 @@
 TODO
 - email verification
-- transaction bootstrap
 - printing of payment slip
-- routing
 - catch all errors from improper post requests

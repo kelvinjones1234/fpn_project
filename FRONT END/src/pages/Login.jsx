@@ -3,6 +3,7 @@ import { Form, Row, Col, Button } from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
 import "../styles/Alert.css";
 import AuthContext from "../context/AuthContext";
+import Footer from "../components/Footer";
 
 export default function LogIn({ children }) {
   const [email, setEmail] = useState("");
@@ -15,14 +16,14 @@ export default function LogIn({ children }) {
   };
 
   return (
-    <>
+    <div style={{ height: "100vh" }}>
       {children}
-      <div className="d-flex justify-content-center align-items-center vh-50">
+      <div style={{ display: "grid", placeItems: "center" }}>
         <Form
           style={{
             maxWidth: "500px",
             width: "100%",
-            paddingTop: "50px",
+            marginTop: "6em",
             paddingRight: "25px",
             paddingLeft: "25px",
           }}
@@ -64,17 +65,18 @@ export default function LogIn({ children }) {
             Sign In
           </Button>
         </Form>
-        <Alert
-          variant="danger"
-          show={showError}
-          onClose={() => setShowError(false)}
-          dismissible
-          className="error-alert"
-        >
-          <Alert.Heading></Alert.Heading>
-          <p>Incorrect login details. Please try again.</p>
-        </Alert>
       </div>
-    </>
+      <Alert
+        variant="danger"
+        show={showError}
+        onClose={() => setShowError(false)}
+        dismissible
+        className="error-alert"
+      >
+        <Alert.Heading></Alert.Heading>
+        <p>Incorrect login details. Please try again.</p>
+      </Alert>
+      <Footer />
+    </div>
   );
 }

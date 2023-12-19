@@ -3,29 +3,29 @@ import { useState, useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import Alert from "react-bootstrap/Alert";
 import "../styles/Alert.css";
-
+import Footer from "../components/Footer";
 
 export default function Register({ children }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { registerUser, showError, setShowError} = useContext(AuthContext);
+  const { registerUser, showError, setShowError } = useContext(AuthContext);
 
   const handleRegister = async (e) => {
     e.preventDefault();
     registerUser(email, password);
   };
-  
+
   return (
-    <>
+    <div style={{ height: "100vh" }}>
       {children}
-      <div className="d-flex justify-content-center align-items-center vh-50">
+      <div style={{ display: "grid", placeItems: "center" }}>
         <Form
           style={{
             maxWidth: "500px",
             width: "100%",
-            paddingTop: "50px",
             paddingRight: "25px",
             paddingLeft: "25px",
+            marginTop: "6em",
           }}
           onSubmit={handleRegister}
         >
@@ -76,6 +76,7 @@ export default function Register({ children }) {
           <p>User already exists. Login instead.</p>
         </Alert>
       </div>
-    </>
+      <Footer />
+    </div>
   );
 }

@@ -5,6 +5,8 @@ import { Form, Row, Col, Button } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
+import Footer from "../components/Footer";
+import Loading from "../components/Loading";
 
 export default function Payment({ children }) {
   const { authTokens, user } = useContext(AuthContext);
@@ -19,10 +21,10 @@ export default function Payment({ children }) {
     amount: "",
   });
 
-  const [paymentStatus, setPaymentStatus] = useState(null);
   const [departments, setDepartments] = useState([]);
   const [levies, setLevies] = useState([]);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // Fetch department options from Django API
@@ -75,7 +77,7 @@ export default function Payment({ children }) {
         alert("Please fill in all fields.");
         return;
       }
-
+      setLoading(true);
       // Fetch authorization_url from your endpoint
       const response = await fetch(
         "http://localhost:8000/api/initiate-payment/",
@@ -101,50 +103,23 @@ export default function Payment({ children }) {
       window.location.href = data.authorization_url;
 
       // Set the payment status (optional)
-      setPaymentStatus(
-        <p>
-          <b>Redirecting to paystack...</b>
-        </p>
-      );
     } catch (error) {
       console.error("Error initiating payment:", error.message);
       // Handle error as needed
     }
   };
 
-  const handleSignOut = async () => {
-    try {
-      const response = await fetch("http://localhost:8000/api/signout/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // Include credentials in the request
-      });
-
-      if (response.ok) {
-        console.log("User signed out successfully");
-        navigate("/authentication");
-        // setCurrentUser(false); // Update the user's sign-in state
-      } else {
-        console.error("Error signing out:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
-  };
-
   return (
-    <>
+    <div className="main-container" style={{ height: "100vh" }}>
       {children}
-      <div className="d-flex justify-content-center align-items-center vh-50">
+      <div style={{ display: "grid", placeItems: "center" }}>
         <Form
+          className="form-conatainer"
           style={{
-            maxWidth: "900px",
+            maxWidth: "400px",
             width: "100%",
-            paddingTop: "50px",
-            paddingRight: "25px",
-            paddingLeft: "50px",
+            margin: "6em auto",
+            display: "grid",
           }}
         >
           <label className="mb-3 mx-3">
@@ -263,15 +238,13 @@ export default function Payment({ children }) {
               readOnly
             />
           </label>
-
-          
-
           <Button className="mb-3 mx-3" id="form-btn" onClick={initiatePayment}>
             Make Payment
           </Button>
-          {paymentStatus && <p>{paymentStatus}</p>}
+          {loading && <Loading />}
         </Form>
       </div>
-    </>
+      <Footer />
+    </div>
   );
 }

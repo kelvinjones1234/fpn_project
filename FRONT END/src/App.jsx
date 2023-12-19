@@ -6,6 +6,8 @@ import NavBar from "./components/Navbar";
 import Payment from "./pages/Payment";
 import ProtectedRoutes from "./utils/PrivateRoute";
 import { AuthProvider } from "./context/AuthContext";
+import "./styles/Alert.css";
+ 
 
 function App() {
   return (
