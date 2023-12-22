@@ -4,7 +4,7 @@ from django.utils import timezone
 import secrets
 
 class Transaction(models.Model):
-    matriculation_number = models.CharField(max_length=20)
+    matriculation_number = models.CharField(max_length=13)
     first_name = models.CharField(max_length=20)
     middle_name = models.CharField(max_length=20, blank=True, null=True)
     last_name = models.CharField(max_length=200)

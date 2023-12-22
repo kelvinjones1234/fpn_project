@@ -111,7 +111,7 @@ class VerifyPaymentView(APIView):
                 # Update your database, mark the payment as successful, etc.
                 transaction.paid = True
                 transaction.save()
-                serializer = TransactionSerializer(transaction)
+                serializer = RecieptSerializer(transaction)
 
                 return Response(serializer.data)
             else:

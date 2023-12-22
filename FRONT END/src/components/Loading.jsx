@@ -1,7 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 
-function Loading() {
+function Loading({message}) {
   return (
     <>
       <Button variant="primary" style={{margin: "0 1em"}} disabled>
@@ -12,7 +12,7 @@ function Loading() {
           role="status"
           aria-hidden="true"
         />
-        You are being redirected to payment gateway...
+        {message}
       </Button>
     </>
   );

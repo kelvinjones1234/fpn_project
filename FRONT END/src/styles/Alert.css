@@ -28,3 +28,9 @@
     top: 5rem; /* Adjust the top position when the alert is visible */
   }
   
+  @media print {
+    .print-button {
+      display: none;
+    }
+  }
+  

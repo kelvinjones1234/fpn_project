@@ -199,7 +199,7 @@ export default function Payment({ children }) {
           <Button className="mb-3 mx-3" id="form-btn" onClick={handlePayment}>
             Make Payment
           </Button>
-          {loading && <Loading />}
+          {loading && <Loading message="You are being redirected to payment gateway..." />}
         </Form>
       </div>
       <Footer />

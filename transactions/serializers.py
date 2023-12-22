@@ -13,6 +13,7 @@ class TransactionSerializer(serializers.ModelSerializer):
 
 
 class RecieptSerializer(serializers.Serializer):
+    id = serializers.CharField()
     reference = serializers.CharField()
     first_name = serializers.CharField()
     middle_name = serializers.CharField()
@@ -23,5 +24,6 @@ class RecieptSerializer(serializers.Serializer):
     date = serializers.DateTimeField()
     paid = serializers.CharField()
     reference = serializers.CharField()
+    matriculation_number = serializers.CharField()
     email = serializers.EmailField()
 
