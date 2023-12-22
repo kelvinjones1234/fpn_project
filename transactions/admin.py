@@ -4,7 +4,7 @@ from .models import Transaction
 class TransactionAdmin(admin.ModelAdmin):
     model = Transaction
     list_display = ('matriculation_number', 'first_name', 'middle_name', 'last_name', 'department', 'levy', 'amount', 'email', 'reference', 'paid')
-    list_filter = ('department', 'levy', 'amount',)
+    list_filter = ('department', 'levy', 'amount', 'paid',)
     readonly_fields = ['matriculation_number', 'levy', 'date', 'amount']
 
 

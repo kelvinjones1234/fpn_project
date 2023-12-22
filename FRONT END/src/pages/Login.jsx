@@ -8,7 +8,8 @@ import Footer from "../components/Footer";
 export default function LogIn({ children }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { loginUser, showError, setShowError } = useContext(AuthContext);
+  const { loginUser, showError, setShowError } =
+    useContext(AuthContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -50,7 +51,7 @@ export default function LogIn({ children }) {
             controlId="formHorizontalPassword"
           >
             <Form.Label column sm={3}>
-              Password
+              Password 
             </Form.Label>
             <Col sm={9}>
               <Form.Control

@@ -9,7 +9,7 @@ import Footer from "../components/Footer";
 import Loading from "../components/Loading";
 
 export default function Payment({ children }) {
-  const { authTokens, user } = useContext(AuthContext);
+  const { authTokens, user, initiatePayment, setLoading, loading} = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
     matriculation_number: "",
@@ -24,7 +24,6 @@ export default function Payment({ children }) {
   const [departments, setDepartments] = useState([]);
   const [levies, setLevies] = useState([]);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // Fetch department options from Django API
@@ -63,51 +62,10 @@ export default function Payment({ children }) {
     }));
   };
 
-  const initiatePayment = async () => {
-    try {
-      if (
-        !formData.matriculation_number ||
-        !formData.first_name ||
-        !formData.last_name ||
-        !formData.department ||
-        !formData.levy ||
-        !formData.amount
-        // !formData.email
-      ) {
-        alert("Please fill in all fields.");
-        return;
-      }
-      setLoading(true);
-      // Fetch authorization_url from your endpoint
-      const response = await fetch(
-        "http://localhost:8000/api/initiate-payment/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + String(authTokens.access),
-          },
-          withCredentials: true,
+  const handlePayment = async() => {
+    initiatePayment(formData)
+  }
 
-          body: JSON.stringify(formData),
-        }
-      );
-      console.log(formData);
-      if (!response.ok) {
-        throw new Error("Failed to initiate payment");
-      }
-
-      const { data } = await response.json();
-
-      // Open the authorization_url in a new window
-      window.location.href = data.authorization_url;
-
-      // Set the payment status (optional)
-    } catch (error) {
-      console.error("Error initiating payment:", error.message);
-      // Handle error as needed
-    }
-  };
 
   return (
     <div className="main-container" style={{ height: "100vh" }}>
@@ -238,7 +196,7 @@ export default function Payment({ children }) {
               readOnly
             />
           </label>
-          <Button className="mb-3 mx-3" id="form-btn" onClick={initiatePayment}>
+          <Button className="mb-3 mx-3" id="form-btn" onClick={handlePayment}>
             Make Payment
           </Button>
           {loading && <Loading />}

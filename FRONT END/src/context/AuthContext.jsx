@@ -11,6 +11,9 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [showError, setShowError] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const [reference, setReference] = useState("");
 
   const [user, setUser] = useState(() =>
     localStorage.getItem("authTokens")
@@ -56,6 +59,55 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const initiatePayment = async (formData) => {
+    try {
+      if (
+        !formData.matriculation_number ||
+        !formData.first_name ||
+        !formData.last_name ||
+        !formData.department ||
+        !formData.levy ||
+        !formData.amount
+        // !formData.email
+      ) {
+        alert("Please fill in all fields.");
+        return;
+      }
+      setLoading(true);
+      // Fetch authorization_url from your endpoint
+      const response = await fetch(
+        "http://localhost:8000/api/initiate-payment/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + String(authTokens.access),
+          },
+          withCredentials: true,
+
+          body: JSON.stringify(formData),
+        }
+      );
+      console.log(formData);
+      if (!response.ok) {
+        throw new Error("Failed to initiate payment");
+      }
+
+      const { data } = await response.json();
+
+      // Open the authorization_url in a new window
+      window.location.href = data.authorization_url;
+      setReference(data.reference);
+
+      // Set the payment status (optional)
+    } catch (error) {
+      console.error("Error initiating payment:", error.message);
+      // Handle error as needed
+    }
+  };
+
+  console.log(reference)
+
   const registerUser = async (email, password) => {
     try {
       if (!email || !password) {
@@ -96,13 +148,16 @@ export const AuthProvider = ({ children }) => {
   const contextData = {
     user: user,
     showError: showError,
+    loading: loading,
     authTokens: authTokens,
+    reference: reference,
+    setLoading: setLoading,
     setShowError: setShowError,
     loginUser: loginUser,
     logoutUser: logoutUser,
     registerUser: registerUser,
+    initiatePayment: initiatePayment,
   };
-
   return (
     <AuthContext.Provider value={contextData}>{children}</AuthContext.Provider>
   );

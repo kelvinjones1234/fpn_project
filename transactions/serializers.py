@@ -12,3 +12,16 @@ class TransactionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class RecieptSerializer(serializers.Serializer):
+    reference = serializers.CharField()
+    first_name = serializers.CharField()
+    middle_name = serializers.CharField()
+    last_name = serializers.CharField()
+    department = serializers.CharField()
+    levy = serializers.CharField()
+    amount = serializers.CharField()
+    date = serializers.DateTimeField()
+    paid = serializers.CharField()
+    reference = serializers.CharField()
+    email = serializers.EmailField()
+

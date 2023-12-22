@@ -5,9 +5,9 @@ import Register from "./pages/Register";
 import NavBar from "./components/Navbar";
 import Payment from "./pages/Payment";
 import ProtectedRoutes from "./utils/PrivateRoute";
-import { AuthProvider } from "./context/AuthContext";
+import AuthContext, { AuthProvider } from "./context/AuthContext";
 import "./styles/Alert.css";
- 
+import Reciept from "./pages/Reciept";
 
 function App() {
   return (
@@ -35,11 +35,21 @@ function App() {
               path="initiate-payment/"
               element={
                 <Payment>
-                  <NavBar onCli statusButton="Logout" />
+                  <NavBar statusButton="Logout" />
                 </Payment>
               }
             />
+            <Route
+            path="reciept/"
+            element={
+              <Reciept>
+                <NavBar statusButton="Logout" />
+              </Reciept>
+            }
+          >
           </Route>
+          </Route>
+          
         </Routes>
       </AuthProvider>
     </BrowserRouter>

@@ -5,10 +5,15 @@ from django.conf import settings
 from rest_framework import generics
 from .models import  Transaction
 import requests
+from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from management_app.models import Department, Levy
-from .serializers import TransactionSerializer
+from .serializers import TransactionSerializer, RecieptSerializer
 from rest_framework.permissions import IsAuthenticated
+from django.http import HttpResponse, JsonResponse
+from django.views import View
+
+
 
 
 class TransactionListCreateView(generics.ListCreateAPIView):
@@ -46,7 +51,8 @@ class InitiatePaymentView(APIView):
             'amount': amount_in_kobo,
             'currency': 'NGN',
             'email': user.email,
-            'callback_url': f'http://localhost:8000/api/verify-payment/',
+            'callback_url': f'http://localhost:5173/reciept/',
+
             # Add other necessary parameters as needed
         }
 
@@ -105,8 +111,9 @@ class VerifyPaymentView(APIView):
                 # Update your database, mark the payment as successful, etc.
                 transaction.paid = True
                 transaction.save()
+                serializer = TransactionSerializer(transaction)
 
-                return Response({'status': 'success', 'message': 'Payment verification successful'})
+                return Response(serializer.data)
             else:
                 # Handle payment verification failure
                 transaction.delete()
@@ -114,3 +121,7 @@ class VerifyPaymentView(APIView):
         else:
             # Handle the case where the 'data' key is not present in the response
             return Response({'status': 'error', 'message': 'Invalid response from Paystack'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
