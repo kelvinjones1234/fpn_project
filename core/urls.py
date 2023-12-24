@@ -22,6 +22,6 @@ urlpatterns = [
     path('api/', include('auth_profile_app.urls')),
     path('api/', include('rest_framework.urls')),
     path('api/', include('transactions.urls')),
-    path('api/', include('management_app.urls'))
+    path('api/', include('management_app.urls')),
 
 ]

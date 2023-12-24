@@ -80,14 +80,6 @@ class SignUpView(APIView):
 
 
 
-
-class UserView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [SessionAuthentication]  # Use square brackets for the import
-
-    def get(self, request):
-        serializer = UserSerializer(request.user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
     
 
         

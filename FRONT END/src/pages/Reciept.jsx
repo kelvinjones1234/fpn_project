@@ -3,6 +3,7 @@ import NavBar from "../components/Navbar";
 import "../styles/Alert.css";
 import Loading from "../components/Loading";
 import Footer from "../components/Footer";
+import emailjs from "emailjs-com";
 
 import {
   Card,
@@ -55,6 +56,37 @@ const Receipt = ({ children }) => {
           const data = await response.json();
           setReceiptData(data);
           console.log(data);
+          const sendEmail = async () => {
+            const templateParams = {
+              to_email: data.email,
+              first_name: data.first_name,
+              last_name: data.last_name,
+              middle_name: data.middle_name,
+              department: data.department,
+              amount: data.amount,
+              date: data.date,
+              matriculation_number: data.matriculation_number,
+              levy: data.levy,
+              reference: data.reference,
+              id: data.id,
+
+              // Add other parameters as needed by your template
+            };
+
+            try {
+              await emailjs.send(
+                "service_ec4nozp", // Replace with your service ID
+                "template_lhiajwz", // Replace with your template ID
+                templateParams,
+                "DrNXDe2rxLRoITaMa" // Replace with your user ID
+              );
+
+              console.log("Email sent successfully!");
+            } catch (error) {
+              console.error("Error sending email:", error);
+            }
+          };
+          sendEmail();
         } catch (error) {
           console.error("Error occurred during payment verification:", error);
         } finally {
@@ -66,8 +98,6 @@ const Receipt = ({ children }) => {
     }
   }, []); // No dependencies, only run once on mount
 
-  const isPrinting = () => window.matchMedia("print").matches;
-
   return (
     <div className="main-container" style={{ height: "100vh" }}>
       {children} {/* Render NavBar only if not in print mode */}
@@ -77,7 +107,7 @@ const Receipt = ({ children }) => {
           justifyContent: "center",
           marginTop: "2rem",
           marginBottom: "6rem",
-          display: "grid"
+          display: "grid",
         }}
       >
         {loading ? (
@@ -114,7 +144,7 @@ const Receipt = ({ children }) => {
                       {receiptData.id}
                     </Badge>
                   </Col>
-                  <Col>Payment Date: {receiptData.date.slice(0, 10)}</Col>
+                  {/* <Col>Payment Date: {receiptData.date.slice(0, 10)}</Col> */}
                 </Row>
                 <Row>
                   <Col>
@@ -140,7 +170,7 @@ const Receipt = ({ children }) => {
                   <tbody>
                     <tr>
                       <th>Levy</th>
-                      <td>NACOSS</td>
+                      <td>{receiptData.levy}</td>
                     </tr>
                     <tr>
                       <th>Reference Number</th>

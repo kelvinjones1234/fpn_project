@@ -22,18 +22,18 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'auth_profile_app',
+    'rest_framework_simplejwt',
     'rest_framework',
+    'django.contrib.admin',
     'corsheaders',
     'management_app',
     'transactions',
-    'rest_framework_simplejwt',
 ] 
 
 MIDDLEWARE = [
@@ -109,7 +109,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 
 # Static files (CSS, JavaScript, Images)
