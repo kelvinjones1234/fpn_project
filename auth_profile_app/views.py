@@ -44,6 +44,7 @@ def verify_email(request, uidb64, token):
     else:
         return Response({'detail': 'Invalid verification link.'}, status=status.HTTP_400_BAD_REQUEST)
 
+
 @permission_classes([AllowAny])
 class SignUpView(APIView):
     """
@@ -63,23 +64,16 @@ class SignUpView(APIView):
             uidb64 = urlsafe_base64_encode(force_bytes(user.id))
             token = default_token_generator.make_token(user)
             activation_link = f'{request.build_absolute_uri("/")[:-1]}/api/verify-email/{uidb64}/{token}/'
+            send_mail(
+                "Verification mail",
+                f"click the link: {activation_link} to activate your account",
+                settings.EMAIL_HOST_USER,
+                [request.user.email],
+                fail_silently=False
+            )
 
-            return Response({'verification': activation_link}, status=status.HTTP_201_CREATED)
+            return Response("Your account have been activated successfully", status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    # def send_verification_email(self, request, user):
-    #     subject = 'Activate Your Account'
-    #     uidb64 = urlsafe_base64_encode(bytes(user.id))
-    #     token = default_token_generator.make_token(user)
-    #     activation_link = f'{request.build_absolute_uri("/")[:-1]}/verify-email/{uidb64}/{token}/'
-    #     message = render_to_string('email_verification.html', {'activation_link': activation_link})
-    #     plain_message = strip_tags(message)
-
-    #     send_mail(subject, plain_message, 'from@example.com', [user.email], html_message=message)
-    #     return Response({'activation_link': activation_link})
-
-
-
     
 
         

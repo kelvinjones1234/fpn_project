@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import NavBar from "../components/Navbar";
 import "../styles/Alert.css";
 import Loading from "../components/Loading";
 import Footer from "../components/Footer";
 import emailjs from "emailjs-com";
+
 
 import {
   Card,
