@@ -5,7 +5,7 @@ import Register from "./pages/Register";
 import NavBar from "./components/Navbar";
 import Payment from "./pages/Payment";
 import ProtectedRoutes from "./utils/PrivateRoute";
-import AuthContext, { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "./context/AuthContext";
 import "./styles/Alert.css";
 import Reciept from "./pages/Reciept";
 
@@ -15,7 +15,7 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route
-            path="login/"
+            path="home-page/"
             element={
               <LogIn>
                 <NavBar statusButton="Register" />
@@ -28,7 +28,7 @@ function App() {
               <Register>
                 <NavBar statusButton="Login" />
               </Register>
-            }
+            } 
           />
           <Route element={<ProtectedRoutes />}>
             <Route
@@ -38,7 +38,7 @@ function App() {
                   <NavBar statusButton="Logout" />
                 </Payment>
               }
-            />
+              />
             <Route
             path="reciept/"
             element={

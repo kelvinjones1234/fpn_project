@@ -14,8 +14,6 @@ from django.http import HttpResponse, JsonResponse
 from django.views import View
 
 
-
-
 class TransactionListCreateView(generics.ListCreateAPIView):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
@@ -41,7 +39,6 @@ class InitiatePaymentView(APIView):
 
         amount_in_kobo = int(amount) * 100
 
-        # Make a request to Paystack to initialize the payment
         headers = {
             'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
             'Content-Type': 'application/json',
@@ -53,7 +50,6 @@ class InitiatePaymentView(APIView):
             'email': user.email,
             'callback_url': f'http://localhost:5173/reciept/',
 
-            # Add other necessary parameters as needed
         }
 
         response = requests.post('https://api.paystack.co/transaction/initialize', json=data, headers=headers)
@@ -76,7 +72,6 @@ class InitiatePaymentView(APIView):
         transaction.save()
 
         return Response(response_data, status=status.HTTP_201_CREATED)
-
 
 
 class VerifyPaymentView(APIView):
