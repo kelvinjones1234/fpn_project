@@ -38,7 +38,7 @@ class InitiatePaymentView(APIView):
         levy = request.data.get('levy')
 
         amount_in_kobo = int(amount) * 100
-
+ 
         headers = {
             'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
             'Content-Type': 'application/json',

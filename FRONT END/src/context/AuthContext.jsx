@@ -128,7 +128,7 @@ export const AuthProvider = ({ children }) => {
       console.log("data:", response);
 
       if (response.status === 201) {
-        navigate("/login/");
+        navigate("home-page/");
       } else {
         console.error("Login failed:", response.statusText);
         setShowError(true);

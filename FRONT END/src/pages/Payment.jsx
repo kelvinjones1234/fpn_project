@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 import Footer from "../components/Footer";
 import Loading from "../components/Loading";
-
+ 
 export default function Payment({ children }) {
   const { authTokens, user, initiatePayment, setLoading, loading} = useContext(AuthContext);
 
